@@ -1,47 +1,37 @@
-// Atualiza o ano no rodapé
-document.getElementById('currentYear').textContent = new Date().getFullYear();
-// Bloqueia o botão direito
-document.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-});
+// Obtém todos os itens da lista de vídeos
+const videoListItems = document.querySelectorAll('.video-list li');
 
-// Função para carregar um vídeo no iframe
-function changeVideo(videoSrc) {
-    const iframe = document.querySelector('.player iframe');
-    iframe.src = videoSrc;
-}
-document.getElementById('currentYear').textContent = new Date().getFullYear();
-document.addEventListener("DOMContentLoaded", function () {
-    // Função para remover a classe 'selected' de todos os itens da lista
-    function clearSelected() {
-        const videoItems = document.querySelectorAll(".video-list li");
-        videoItems.forEach(item => {
-            item.classList.remove("selected");
-        });
-    }
-
-    // Função para mudar o vídeo no player
-    function changeVideo(videoUrl) {
-        const player = document.querySelector(".player iframe");
+// Função para alterar o vídeo principal e destacar o vídeo selecionado
+function changeVideo(videoUrl) {
+    // Atualiza o iframe do player
+    const player = document.querySelector('.player iframe');
+    if (player) {
         player.src = videoUrl;
-
-        // Marca o item selecionado como azul
-        clearSelected();
-        event.target.classList.add("selected");
     }
 
-    // Adiciona o evento onclick a todos os vídeos
-    const videoItems = document.querySelectorAll(".video-list li");
-    videoItems.forEach(item => {
-        item.addEventListener("click", function (event) {
-            const videoUrl = this.getAttribute("onclick").match(/'([^']+)'/)[1];
-            changeVideo(videoUrl);
-        });
-    });
+    // Remove a classe 'selected' de todos os itens
+    videoListItems.forEach(item => item.classList.remove('selected'));
 
-    // Marca o primeiro vídeo como selecionado ao carregar a página
-    const firstVideo = document.querySelector(".video-list li");
-    if (firstVideo) {
-        firstVideo.classList.add("selected");
+    // Adiciona a classe 'selected' ao item clicado
+    const clickedItem = Array.from(videoListItems).find(
+        item => item.getAttribute('onclick')?.includes(videoUrl)
+    );
+
+    if (clickedItem) {
+        clickedItem.classList.add('selected');
     }
-});
+}
+
+// Marca o primeiro vídeo como selecionado ao carregar a página
+function initializeFirstVideo() {
+    if (videoListItems.length > 0) {
+        const firstVideoItem = videoListItems[0];
+        const firstVideoUrl = firstVideoItem.getAttribute('onclick').match(/'(.*?)'/)[1];
+
+        // Reproduz o primeiro vídeo e aplica a classe 'selected'
+        changeVideo(firstVideoUrl);
+    }
+}
+
+// Inicializa o comportamento da lista ao carregar a página
+window.addEventListener('DOMContentLoaded', initializeFirstVideo);
