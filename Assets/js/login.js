@@ -7,7 +7,7 @@ document.getElementById("login-btn").addEventListener("click", () => {
             console.log("Login realizado com sucesso:", userCredential.user);
 
             // Carregar conteúdo da mentoria.html
-            fetch("https://feliperodrigues.net.br/mentoria")
+            fetch("https://lferodrigues.github.io/teste/mentoria")
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("Erro ao carregar a mentoria.");
